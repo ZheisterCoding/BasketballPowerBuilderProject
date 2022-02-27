@@ -1,0 +1,83 @@
+CREATE TABLE TEAM(                                      
+    team_id 		char(10)                      		NOT NULL,   
+    staff_id 		char(10)                      		NOT NULL,    
+    name 		varchar2(40)                  		NOT NULL,     
+    university		varchar2(40)     	      		NOT NULL,   
+    team_status 	char(7)       				NOT NULL,
+    approval_time	date     	      		        NOT NULL, 
+    registration_time	date    	      		        NOT NULL,
+    team_password	varchar2(40)     	      		NOT NULL,         
+    CONSTRAINT  TeamPK  PRIMARY KEY (team_id),
+    CONSTRAINT  TeamFK  FOREIGN KEY (staff_id)  REFERENCES  STAFF(staff_id)  
+);
+
+CREATE TABLE STAFF(                                      
+    staff_id		char(10)                      		NOT NULL,   
+    staff_name 		varchar2(40)                  		NOT NULL,   
+    sex			char(2)                 		NOT NULL,      
+    staff_password	varchar2(40)     	      		NOT NULL,     
+    CONSTRAINT  StaffPK  PRIMARY KEY (staff_id)
+);
+
+CREATE TABLE PLAYER(                                      
+    player_id 		char(10)                      		NOT NULL,
+    team_id		char(10)				NOT NULL, 
+    player_name 	varchar2(40)  				NOT NULL,
+    sex 		char(2)                  		NOT NULL,
+    body_height		float		default 0.0		NOT NULL,    
+    birthdate		date					NOT NULL,     
+    degree_study	varchar2(40)     	      		NOT NULL,         
+    CONSTRAINT  PlayerPK  PRIMARY KEY (player_id),
+    CONSTRAINT  PlayerFK  FOREIGN KEY (team_id)  REFERENCES  TEAM(team_id)  
+);
+
+CREATE TABLE MATCH(                                      
+    match_id		int 		NOT NULL，
+    pic_id		char(10)				NOT NULL, 
+    game_status		char(7)					NOT NULL,
+    match_time 		date                 			NOT NULL,
+    remarks		varchar2(1000)				NULL,    
+    seat_fee		float		default 0.0		NOT NULL,             
+    CONSTRAINT  MatchPK  PRIMARY KEY (match_id),
+    CONSTRAINT  MatchFK  FOREIGN KEY (pic_id)  REFERENCES  STAFF(staff_id)  
+);
+
+CREATE TABLE TICKET(                                      
+    ticket_id		int 		NOT NULL，
+    match_id		int 		NOT NULL，
+    holder_name		varchar2(40)				NOT NULL,
+    seat_no 		char(4)                 		NOT NULL,
+    payment_date	date					NOT NULL,            
+    CONSTRAINT  TicketPK PRIMARY KEY (ticket_id),
+    CONSTRAINT  TicketFK  FOREIGN KEY (match_id)  REFERENCES  MATCH(match_id)  
+);
+
+
+CREATE TABLE ONGOING(                                      
+    team_id		char(10)                      		NOT NULL,
+    match_id		int 		NOT NULL，
+    total_points	int	default 0			NOT NULL,
+    remarks		varchar2(1000)				NULL,
+    win_status		char(7)					NOT NULL,    
+    CONSTRAINT  OngoingPK PRIMARY KEY (match_id, team_id),
+    CONSTRAINT  OngoingFK1  FOREIGN KEY (team_id)  REFERENCES  TEAM(team_id),
+    CONSTRAINT  OngoingFK2  FOREIGN KEY (match_id)  REFERENCES  MATCH(match_id)    
+);
+
+CREATE TABLE APPROVAL(                                      
+    team_id		char(10)                      		NOT NULL,
+    staff_id		char(10)				NOT NULL, 
+    registration_time	date					NOT NULL,
+    result		char(7)					NOT NULL,    
+    CONSTRAINT  ApprovalPK PRIMARY KEY (staff_id, team_id),
+    CONSTRAINT  ApprovalFK1  FOREIGN KEY (team_id)  REFERENCES  TEAM(team_id),
+    CONSTRAINT  ApprovalFK2 FOREIGN KEY (staff_id)  REFERENCES  STAFF(staff_id)    
+);
+
+CREATE TABLE GLOBAL_VAR(
+    GLOBAL_VAR	char(20)	NOT NULL,
+    STATUS	int		NOT NULL,
+    CONSTRAINT  GlobalPK PRIMARY KEY (GLOBAL_VAR)
+);
+
+
